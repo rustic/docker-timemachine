@@ -15,7 +15,7 @@ COPY samba/supervisord.conf /etc/supervisord.conf
 
 VOLUME ["/timemachine"]
 
-EXPOSE 137/udp 138/udp 139 445
+EXPOSE 445
 
 HEALTHCHECK --interval=5m --timeout=3s \
   CMD (avahi-daemon -c && \

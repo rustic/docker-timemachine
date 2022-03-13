@@ -7,6 +7,7 @@ RUN apk add --no-cache \
     nss-mdns \
     samba \
     supervisor \
+    && sed -i 's/#enable-dbus=yes/enable-dbus=no/g' /etc/avahi/avahi-daemon.conf \
     && rm -rf /var/cache/apk/* \
     && rm /etc/avahi/services/*
 

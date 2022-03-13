@@ -19,7 +19,6 @@ VOLUME ["/timemachine"]
 
 EXPOSE 445
 
-RUN ["chmod", "+x", "/tmp/setup.sh"]
 ENTRYPOINT ["/tmp/setup.sh"]
 
 HEALTHCHECK --interval=5m --timeout=3s \

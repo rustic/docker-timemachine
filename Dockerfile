@@ -4,17 +4,16 @@ RUN apk update \
 
 RUN apk add --no-cache \
     avahi \
-    nss-mdns \
     samba \
     supervisor \
     && sed -i 's/#enable-dbus=yes/enable-dbus=no/g' /etc/avahi/avahi-daemon.conf \
     && rm -rf /var/cache/apk/* \
     && rm /etc/avahi/services/*
 
-COPY samba/samba.service samba/template_quota /etc/avahi/services/
+COPY samba/samba.service /etc/avahi/services/samba.service
 COPY samba/smb.conf /etc/samba/smb.conf
 COPY samba/supervisord.conf /etc/supervisord.conf
-COPY setup.sh template_quota /tmp/
+COPY setup.sh samba/template_quota /tmp/
 
 VOLUME ["/timemachine"]
 

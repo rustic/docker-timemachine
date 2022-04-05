@@ -9,14 +9,15 @@ jobs:
   build:
     docker:
       - image: cimg/base:stable
-  steps:
-    - setup_remote_docker:
-        version: 20.10.11
-    - checkout
-    - run: 
-          name: "Setup custom environment variables 1"
-          command: echo 'export MY_VERSION="0.6"' >> $BASH_ENV
-    - run: 
-          name: "Setup custom environment variables 2"
-          command: echo "export MY_HASH=$(git --no-pager log --pretty=format:\"%h\" -1)" >> $BASH_ENV
-    - run: docker buildx build --platform linux/arm64,linux/amd64 --tag rustic/docker-timemachine:latest --tag rustic/docker-timemachine:${MY_VERSION} --build-arg VCS_REF=${MY_HASH} --build-arg VERSION=${MY_VERSION} .
+    steps:
+      - setup_remote_docker:
+          version: 20.10.11
+      - checkout
+      - run: 
+            name: "Setup custom environment variables 1"
+            command: echo 'export MY_VERSION="0.6"' >> $BASH_ENV
+      - run: 
+            name: "Setup custom environment variables 2"
+            command: echo "export MY_HASH=$(git --no-pager log --pretty=format:\"%h\" -1)" >> $BASH_ENV
+      - run: docker buildx build --platform linux/arm64,linux/amd64 --tag rustic/docker-timemachine:latest --tag rustic/docker-timemachine:${MY_VERSION} --build-arg VCS_REF=${MY_HASH} --build-arg VERSION=${MY_VERSION} .
+

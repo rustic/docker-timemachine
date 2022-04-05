@@ -21,7 +21,7 @@ jobs:
             command: echo "export MY_HASH=$(git --no-pager log --pretty=format:\"%h\" -1)" >> $BASH_ENV
       - run: 
             name: "Detting up Buildx Environment" 
-            command: docker buildx create tls-env --use
+            command: docker buildx create --use
       - run: 
             name: "Creating Container"
             command: docker buildx build --platform linux/arm64,linux/amd64 --tag rustic/docker-timemachine:latest --tag rustic/docker-timemachine:${MY_VERSION} --build-arg VCS_REF=${MY_HASH} --build-arg VERSION=${MY_VERSION} .

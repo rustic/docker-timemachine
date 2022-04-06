@@ -15,7 +15,7 @@ jobs:
       - checkout
       - run: 
             name: "Setup custom environment variables 1"
-            command: echo 'export MY_VERSION="0.6"' >> $BASH_ENV
+            command: echo 'export MY_VERSION="0.8"' >> $BASH_ENV
       - run: 
             name: "Setup custom environment variables 2"
             command: echo "export MY_HASH=$(git --no-pager log --pretty=format:\"%h\" -1)" >> $BASH_ENV
@@ -33,7 +33,7 @@ jobs:
             command: docker buildx create builder --use
       - run: 
             name: "Logging in to DockerHub" 
-            command: docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PASSWORD 
+            command: echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USER --password-stdin 
       - run: 
             name: "Creating Container"
             command: docker buildx build --push --platform linux/arm64,linux/amd64 --tag rustic/docker-timemachine:latest --tag rustic/docker-timemachine:${MY_VERSION} --build-arg VCS_REF=${MY_HASH} --build-arg VERSION=${MY_VERSION} .

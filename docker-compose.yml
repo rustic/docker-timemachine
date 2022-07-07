@@ -1,0 +1,9 @@
+services:
+  timemachine:
+    image: rustic/docker-timemachine:latest
+    network_mode: host
+    volumes:
+      - ${SRC_DIR}/timemachine:/timemachine:z
+    environment:
+      - TM_USER=${TM_USER}
+      - TM_PW=${TM_PW}

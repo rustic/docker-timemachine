@@ -8,23 +8,27 @@ workflows:
 jobs:
   build:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/base:current
     steps:
       - setup_remote_docker:
-          version: 20.10.11
+          version: default
       - checkout
       - run: 
-            name: "Setup custom environment variables 1"
-            command: echo 'export MY_VERSION="0.6"' >> $BASH_ENV
+            name: "Setup custom environment variables"
+            command: |
+                        echo 'export MY_VERSION="1.1"' >> $BASH_ENV
+                        echo "export MY_HASH=$(git --no-pager log --pretty=format:\"%h\" -1)" >> $BASH_ENV
+                        echo 'export DOCKERHUB_USER=${DOCKERHUB_USER}' >> $BASH_ENV
+                        echo 'export DOCKERHUB_PASSWORD=${DOCKERHUB_PASSWORD}' >> $BASH_ENV
       - run: 
-            name: "Setup custom environment variables 2"
-            command: echo "export MY_HASH=$(git --no-pager log --pretty=format:\"%h\" -1)" >> $BASH_ENV
+            name: "Setting up Buildx Environment" 
+            command: |
+                        docker context create buildx-build
+                        docker buildx create --use buildx-build
+                        docker run --privileged --rm tonistiigi/binfmt --install all
       - run: 
-            name: "Setup buildx"
-            command: docker context create builder
-      - run: 
-            name: "Detting up Buildx Environment" 
-            command: docker buildx create builder --use
+            name: "Logging in to DockerHub" 
+            command: echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USER --password-stdin                     
       - run: 
             name: "Creating Container"
-            command: docker buildx build --platform linux/arm64,linux/amd64 --tag rustic/docker-timemachine:latest --tag rustic/docker-timemachine:${MY_VERSION} --build-arg VCS_REF=${MY_HASH} --build-arg VERSION=${MY_VERSION} .
+            command: docker buildx build --push --platform linux/arm64,linux/amd64 --tag rustic/docker-timemachine:latest --tag rustic/docker-timemachine:${MY_VERSION} --build-arg VCS_REF=${MY_HASH} --build-arg VERSION=${MY_VERSION} .
